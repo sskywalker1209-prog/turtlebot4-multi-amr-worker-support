@@ -1,3 +1,16 @@
+> **이 저장소에 대해** — Doosan Robotics ROKEY BOOT CAMP 9기 팀 프로젝트 원본 [Jik-Kim/mro-multi-amr](https://github.com/Jik-Kim/mro-multi-amr)의 포크입니다. 아래 원본 README 는 팀 전체 프로젝트 설명이고, 이 안내 절만 이시율이 추가했습니다.
+>
+> - **프로젝트**: TurtleBot4 기반 Multi-AMR 작업자 추종 · 정비 지원 시스템 (2026.08.31 ~ 09.11). 미니 단계 4인 조 → 본 단계 8인 통합팀(PM 있음)
+> - **시연 영상**: [Google Drive](https://drive.google.com/file/d/11n-J_89sI_TaFnmyXjEvgcy3bLyjbCYH/view?usp=sharing)
+> - **이시율 담당**
+>   - 미니 단계: 4인 조 팀장, Vision(외부 웹캠 YOLO 검출 → TurtleBot4 탐색 · 접근)
+>   - 본 단계: 통합팀 주행 파트 2인 공동 — 작업자 추종 개선(남은 거리의 절반 지점을 목표로 설정), 도크 복귀 확장, 안전 복구(속도 명령 중재), 구역 사용권 반납 결함 수정, 셔틀–추종 통합 시험, 실주행 시험, AMR 파트 발표
+> - **팀 담당**: 저장소 골격 · 인터페이스 계약 · 리뷰 · 병합(PM), 셔틀 미션, 관제 · 대시보드, 인지(YOLO · ArUco), 웹캠 등록, Discovery Server 구성
+> - **함께 해결**: 두 대 동시 운용 시 Nav2 기동 중단 · 센서 데이터 끊김 → 주행 기록을 함께 분석해 순차 기동, 필요한 노드만 통신 정보 수신, 시각화 · 중복 카메라 구독 축소
+> - **결과**: 한 대는 전 구간, 다른 한 대는 카메라 고장으로 도크 복귀를 뺀 구간을 수행한 팀 시연
+
+---
+
 # mro-multi-amr — MRO Multi-AMR 정비 지원 시스템 (Phase 1 실증)
 
 정비사(스케일 인형+RC카)가 관제센터에서 자재를 요청하면 TurtleBot4가 창고(A/B/C)에서 가져와 대기공간에서 만나고,
