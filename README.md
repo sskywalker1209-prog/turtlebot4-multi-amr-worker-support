@@ -324,7 +324,7 @@ flowchart TB
 ## 10. 결과와 한계
 
 **결과**
-- 9/10 실주행에서 한 대로 관제 미션 → 언독 → 창고 베이 → 탈출 회전 → 대기공간 → 추종 → 관제 복귀 지시 → 도킹까지 이어지는 단독 완주를 확인했습니다(팀 원본 README 「상태」 절, PM 커밋 [`cd4bb8c`](https://github.com/sskywalker1209-prog/turtlebot4-multi-amr-worker-support/commit/cd4bb8c) — [원문](https://github.com/sskywalker1209-prog/turtlebot4-multi-amr-worker-support/blob/6a00558ee97d0fd2a921c69bc7eedbf182cad4da/README.md#상태)).
+- 9/10 실주행에서 한 대로 관제 미션 → 언독 → 창고 베이 → 탈출 회전 → 대기공간 → 추종 → 관제 복귀 지시 → 도킹까지 이어지는 단독 완주를 확인했습니다(팀 원본 README 「상태」 절, PM 커밋 `cd4bb8c` — [원문](https://github.com/sskywalker1209-prog/turtlebot4-multi-amr-worker-support/blob/6a00558ee97d0fd2a921c69bc7eedbf182cad4da/README.md#상태)).
 - 최종 시연(9/11)에서 **한 대는 전 구간, 다른 한 대는 카메라 고장으로 도크 복귀를 뺀 구간**을 수행했습니다.
 
 **한계와 남은 과제**
