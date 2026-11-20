@@ -134,45 +134,41 @@ flowchart TB
 
 ### 5-2. 로봇 한 대 안의 데이터 흐름 (`/robotN`)
 
-[robot.launch.py](ros2_ws/src/mro_bringup/launch/robot.launch.py)가 노드 6개를 띄우고, Nav2는 [safety_nav2.launch.py](ros2_ws/src/mro_navigation/launch/safety_nav2.launch.py)로 따로 띄웁니다.
+[robot.launch.py](ros2_ws/src/mro_bringup/launch/robot.launch.py)가 노드 6개를 띄우고, Nav2는 [safety_nav2.launch.py](ros2_ws/src/mro_navigation/launch/safety_nav2.launch.py)로 따로 띄웁니다. 그림의 `aruco/*`는 `aruco/id · distance · pose`, `target/*`는 `target/map_point · visible · paired · worker_id`, `mission/assigned`는 `amr_detection`도 받습니다.
 
 ```mermaid
-flowchart LR
+flowchart TB
     FM(["관제 fleet_manager"])
-    ZS(["관제 zone_semaphore"])
     WH(["웹캠2 webcam_hint"])
-    subgraph ROBOT["로봇 1대 /robotN"]
-        AR["aruco_detector"]
-        AD["amr_detection"]
-        SM["shuttle_mission"]
-        FT["follow_target"]
-        RD["return_dock"]
-        SW["safety_watchdog"]
-        N2["Nav2<br/>AMCL · 경로 계획 · 제어"]
-        TB["TurtleBot4<br/>Create 3 · LiDAR · OAK-D"]
+    ZS(["관제 zone_semaphore"])
+    subgraph PER["인지 (OAK-D)"]
+        AR["aruco_detector<br/>창고 마커"]
+        AD["amr_detection<br/>작업자 검출·재식별"]
     end
+    subgraph MIS["임무 노드"]
+        SM["shuttle_mission<br/>자재 셔틀"]
+        FT["follow_target<br/>접근·추종"]
+        RD["return_dock<br/>순차 복귀·도킹"]
+    end
+    N2["Nav2<br/>AMCL · 경로 계획 · 제어"]
+    SW["safety_watchdog<br/>정지 판정 · 속도 명령 중재"]
+    TB["TurtleBot4<br/>Create 3 · LiDAR · OAK-D"]
     FM -->|"mission/assigned"| SM
-    FM -->|"mission/assigned · mission/finish"| AD
     FM -->|"mission/finish"| FT
     FM -->|"mission/finish"| RD
-    TB -->|"OAK-D 영상"| AR
-    TB -->|"OAK-D 영상 · 깊이"| AD
-    AR -->|"aruco/id · distance · pose"| SM
+    TB -->|"영상 · 깊이"| PER
+    AR -->|"aruco/*"| SM
+    AD -->|"target/*"| FT
+    WH -->|"target_hint"| FT
     SM -->|"shuttle/arrived"| FT
-    AD -->|"target/map_point · visible · paired · worker_id"| FT
-    WH -->|"/webcam2/target_hint"| FT
-    SM <-->|"/fleet/zone_token"| ZS
-    RD <-->|"/fleet/zone_token"| ZS
-    SM -->|"undock · goToPose"| N2
-    FT -->|"goToPose"| N2
-    RD -->|"goToPose · dock"| N2
-    TB -->|"scan · odom · dock_status"| SW
+    SM <-->|"zone_token"| ZS
+    RD <-->|"zone_token"| ZS
+    MIS -->|"Nav2 목표 · dock · undock"| N2
     N2 -->|"cmd_vel_navigation"| SW
-    FT -->|"cmd_vel_search (제자리 회전)"| SW
+    FT -->|"cmd_vel_search"| SW
     SW -->|"cmd_vel (유일한 출력)"| TB
-    SW -.->|"safety/estop"| SM
-    SW -.->|"safety/estop"| FT
-    SW -.->|"safety/estop"| RD
+    TB -->|"scan · odom · dock_status"| SW
+    SW -.->|"safety/estop"| MIS
 ```
 
 - **속도 명령은 `safety_watchdog` 하나만 로봇에 냅니다.** Nav2의 최종 출력은 `cmd_vel_navigation`으로, 추종 노드의 제자리 회전은 `cmd_vel_search`로 워치독에 들어갑니다. 워치독이 정지 상태 · 도킹 여부를 보고 걸러서 `cmd_vel`로 내보냅니다.
